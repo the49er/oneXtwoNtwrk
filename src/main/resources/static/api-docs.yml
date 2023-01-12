@@ -1,0 +1,145 @@
+openapi: '3.0.0'
+info:
+  title: Rest API Application
+  version: 1.0.0
+servers:
+  - url: http://localhost:9999
+tags:
+  - name: Bet
+paths:
+  /api/v1/bet:
+    get:
+      summary: method for finding user
+      operationId: findBets
+      tags:
+        - Bet
+        - parameters:
+            - in: query
+              name: betParams
+              allowEmptyValue: true
+              schema:
+                $ref: '#/components/schemas/FindBetRequest'
+      responses:
+        200:
+          description: all bets
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BetResponse'
+        404:
+          description: Bets not found
+
+    post:
+      summary: create Bets from list
+      operationId: createBets
+      tags:
+        - Bet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BetsCreateRequest'
+      responses:
+        200:
+          description: created Bets
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BetResponse'
+
+
+components:
+  schemas:
+    FindBetRequest:
+      type: object
+      description: bet request params
+      properties:
+        type: array
+        item:
+          $ref: '#/components/schemas/BetResponse'
+
+
+    BetResponse:
+      type: object
+      description: Bet response DTO
+      properties:
+        id:
+          type: integer
+          format: int64
+        numbets:
+          type: integer
+          format: int32
+        game:
+          type: string
+        stake:
+          type: number
+          format: double
+        returns:
+          type: number
+          format: double
+        clientid:
+          type: integer
+          format: int64
+        date:
+          type: string
+
+    BetCreateRequest:
+      type: object
+      description: to create an Entity with IDENTITY ID
+      properties:
+        numbets:
+          type: integer
+          format: int32
+        game:
+          type: string
+        stake:
+          type: number
+          format: double
+        returns:
+          type: number
+          format: double
+        clientid:
+          type: integer
+          format: int64
+        date:
+          type: string
+
+
+    BetsCreateRequest:
+      type: object
+      description: to create an Entity with provided ID
+      properties:
+        bets:
+          type: string
+          items:
+            $ref: '#/components/schemas/BetResponse'
+
+
+    ValidationErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/ErrorResponse"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/ErrorDescription"
+
+
+    ErrorResponse:
+      type: object
+      description: 'Error response'
+      properties:
+        message:
+          type: string
+    ErrorDescription:
+      type: object
+      description: 'Error description'
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+
