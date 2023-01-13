@@ -2,7 +2,6 @@
 
 
 
-
 ### Prerequisites
 
 * Java Development Kit 11 (or higher)
